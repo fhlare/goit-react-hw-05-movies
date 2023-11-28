@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams, Outlet } from 'react-router-dom';
 import { fetchMovie } from 'servers/api';
 import { BASE_POSTER_URL } from 'imgLinks/imgLinks';
 
@@ -37,6 +37,9 @@ export default function MovieDetails() {
             <p>{movie.overview}</p>
             <p>Genres</p>
             <p>{movie.genres.map(ganre => ganre.name).join(', ')}</p>
+            <Link to="cast" >Cast</Link>
+            <Link to="reviews" >Reviews</Link> 
+            <Outlet/>
           </div>
         </div>
       )}
