@@ -1,4 +1,4 @@
-import { BASE_POSTER_URL } from "imgLinks/imgLinks";
+import { BASE_POSTER_URL, DEFAULT_POSTER } from "imgLinks/imgLinks";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { fetchCast } from "servers/api";
@@ -6,7 +6,7 @@ import { fetchCast } from "servers/api";
 
 
 export const Cast = () => {
-  const [cast, setCast] = useState(null)
+  const [cast, setCast] = useState([])
   const { movieId } = useParams();
   console.log(movieId);
   useEffect(() => {
@@ -16,8 +16,8 @@ export const Cast = () => {
     async function getCast() {
       try {
         const showCast = await fetchCast(movieId);
-        console.log(showCast.cast);
-        setCast(showCast.cast);
+        console.log('cast: ', showCast.cast);
+        setCast([...showCast.cast]);
       } catch (error) {
         console.error(error);
       }
@@ -28,17 +28,16 @@ export const Cast = () => {
   return (
     <div>
       <ul>
-
-      </ul>
       {cast.map(({id, name, character, profile_path }) => {
         return (
           <li key={id}>
-            <img src={`${BASE_POSTER_URL + profile_path}`} alt={name} width="200"/>
+            <img src={`${profile_path? BASE_POSTER_URL + profile_path: DEFAULT_POSTER}`} alt={name} width="200"/>
             <p>Name: {name}</p>
             <p>Character: {character}</p>
           </li>
         )
       })}
+      </ul>
     </div>
   );
 }
