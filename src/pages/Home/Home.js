@@ -1,7 +1,7 @@
-
+import { MoviesList } from "components/MoviesList/MoviesList";
 import { useEffect, useState  } from "react";
-import { Link } from "react-router-dom";
 import { fetchTrend } from "servers/api";
+import { HomeTitle } from "./Home.styled";
 
 export default function Home() {
   const [movies, setMovies] = useState([])
@@ -20,18 +20,9 @@ export default function Home() {
   }, [])
 
   return (
-    <div>
-      <ul>
-        {movies.map(movie => {
-          return (
-            <li key={movie.id}>
-              <Link to={`/movies/${movie.id}`}>
-                <p>{movie.title}</p>
-              </Link>
-            </li>
-          )
-        })}
-      </ul>
-    </div>
+    <>
+      <HomeTitle>Trending today</HomeTitle>
+      <MoviesList movies={movies} />
+    </>
   );
 }

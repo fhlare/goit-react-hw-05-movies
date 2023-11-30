@@ -1,8 +1,8 @@
 import { Route, Routes } from 'react-router-dom';
 import { GlobalStyle } from './GlobalStyle';
-import Home from 'pages/Home';
-import Movies from 'pages/Movies';
-import MovieDetails from 'pages/MovieDetails';
+import Home from 'pages/Home/Home';
+import Movies from 'pages/Movies/Movies';
+import MovieDetails from 'pages/MovieDetails/MovieDetails';
 import { Layout } from './Layout/Layout';
 import { Cast } from './Cast/Cast';
 import { Reviews } from './Reviews/Reviews';

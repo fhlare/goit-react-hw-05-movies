@@ -22,3 +22,8 @@ export const fetchReviews = async (movieId) => {
   const response = await axios.get(`/movie/${movieId}/reviews?api_key=${apiKey}`);
   return response.data;
 }
+
+export const fetchMoviesByName = async (movieNmae) => {
+  const response = await axios.get(`/search/movie?api_key=${apiKey}&query=${movieNmae}&include_adult=false&page=1`);
+  return response.data;
+}

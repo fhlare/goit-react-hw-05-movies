@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { fetchReviews } from 'servers/api';
+import { ReviewContainer, ReviewContent, ReviewItem, ReviewList, ReviewAuthor, ReviewMistake } from './Reviesws.styled';
 
 export const Reviews = () => {
   const [reviews, setReviews] = useState([]);
@@ -14,7 +15,6 @@ export const Reviews = () => {
     async function getReviews() {
       try {
         const showRewiews = await fetchReviews(movieId);
-
         setReviews([...showRewiews.results]);
       } catch (error) {
         console.error(error);
@@ -25,21 +25,21 @@ export const Reviews = () => {
   }, [movieId]);
 
   return (
-    <div>
-      {reviews ? (
-        <ul>
+    <ReviewContainer>
+      {reviews.length > 0 ? (
+        <ReviewList>
           {reviews.map(({ id, author, content }) => {
             return (
-              <li key={id}>
-                <p>Author: {author}</p>
-                <p>{content}</p>
-              </li>
+              <ReviewItem key={id}>
+                <ReviewAuthor>Author: {author}</ReviewAuthor>
+                <ReviewContent>{content}</ReviewContent>
+              </ReviewItem>
             );
           })}
-        </ul>
+        </ReviewList>
       ) : (
-        'We don`t have any reviews for this film'
+        <ReviewMistake>We don`t have any reviews for this film</ReviewMistake>
       )}
-    </div>
+    </ReviewContainer>
   );
 };
