@@ -2,9 +2,13 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { fetchReviews } from 'servers/api';
 import { ReviewContainer, ReviewContent, ReviewItem, ReviewList, ReviewAuthor, ReviewMistake } from './Reviesws.styled';
+import { Loader } from 'components/Loader/Loader';
 
-export const Reviews = () => {
+
+const Reviews = () => {
   const [reviews, setReviews] = useState([]);
+  const [isLiading, setIsLoading] = useState(false);
+
 
   const { movieId } = useParams();
 
@@ -14,10 +18,13 @@ export const Reviews = () => {
     }
     async function getReviews() {
       try {
+        setIsLoading(true);
         const showRewiews = await fetchReviews(movieId);
         setReviews([...showRewiews.results]);
       } catch (error) {
         console.error(error);
+      } finally {
+        setIsLoading(false);
       }
     }
 
@@ -26,6 +33,7 @@ export const Reviews = () => {
 
   return (
     <ReviewContainer>
+      {isLiading && (<Loader/>)}
       {reviews.length > 0 ? (
         <ReviewList>
           {reviews.map(({ id, author, content }) => {
@@ -38,8 +46,10 @@ export const Reviews = () => {
           })}
         </ReviewList>
       ) : (
-        <ReviewMistake>We don`t have any reviews for this film</ReviewMistake>
+        <ReviewMistake>We don`t have any reviews for this movie </ReviewMistake>
       )}
     </ReviewContainer>
   );
 };
+
+export default Reviews;

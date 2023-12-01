@@ -3,12 +3,15 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { fetchCast } from "servers/api";
 import { CastList, CastContainer, CastItem, ImgCast, CastName, CastCharacter} from "./Cast.styled";
+import { Loader } from 'components/Loader/Loader';
 
 
 
-export const Cast = () => {
+const Cast = () => {
   const [cast, setCast] = useState([])
   const { movieId } = useParams();
+  const [isLiading, setIsLoading] = useState(false);
+
   console.log(movieId);
   useEffect(() => {
     if (!movieId) {
@@ -16,11 +19,14 @@ export const Cast = () => {
     }
     async function getCast() {
       try {
+        setIsLoading(true);
         const showCast = await fetchCast(movieId);
         console.log('cast: ', showCast.cast);
         setCast([...showCast.cast]);
       } catch (error) {
         console.error(error);
+      } finally {
+        setIsLoading(false);
       }
     }
     getCast();
@@ -28,6 +34,7 @@ export const Cast = () => {
   }, [movieId])
   return (
     <CastContainer>
+      {isLiading && (<Loader/>)}
       <CastList>
       {cast.map(({id, name, character, profile_path }) => {
         return (
@@ -42,3 +49,5 @@ export const Cast = () => {
     </CastContainer>
   );
 }
+
+export default Cast;

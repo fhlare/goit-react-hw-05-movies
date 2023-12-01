@@ -5,10 +5,13 @@ import { IoIosSearch } from 'react-icons/io';
 import { useSearchParams } from 'react-router-dom';
 import { fetchMoviesByName } from 'servers/api';
 import { Field, Form, SearchFormButton } from './Movies.styled';
+import { Loader } from 'components/Loader/Loader';
+import toast, { Toaster } from 'react-hot-toast';
 
 export default function Movies() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [movies, setMovies] = useState([]);
+  const [isLiading, setIsLoading] = useState(false);
 
   const query = searchParams.get('query');
   useEffect(() => {
@@ -18,10 +21,20 @@ export default function Movies() {
 
     async function getMoviesByName() {
       try {
+        setIsLoading(true);
         const showMovieByName = await fetchMoviesByName(query);
-        setMovies([...showMovieByName.results]);
+        if (showMovieByName.results.length > 0) {
+          setMovies([...showMovieByName.results]);
+        } else {
+          toast.error(
+            'Oops! No movies found for this search. Try search again'
+          );
+          setMovies([]);
+        }
       } catch (error) {
         console.error(error);
+      } finally {
+        setIsLoading(false);
       }
     }
     getMoviesByName();
@@ -45,7 +58,20 @@ export default function Movies() {
           <Field name="text" type="text" placeholder="Search movie" />
         </Form>
       </Formik>
+      {isLiading && <Loader />}
       <MoviesList movies={movies} />
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          success: {
+            duration: 3000,
+            theme: {
+              primary: 'green',
+              secondary: 'black',
+            },
+          },
+        }}
+      />
     </>
   );
 }

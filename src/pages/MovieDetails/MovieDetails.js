@@ -1,12 +1,24 @@
-import { useEffect, useState } from 'react';
-import { useParams, Outlet } from 'react-router-dom';
+import { Suspense, useEffect, useRef, useState } from 'react';
+import { useParams, Outlet, useLocation } from 'react-router-dom';
 import { fetchMovie } from 'servers/api';
 import { BASE_POSTER_URL, DEFAULT_POSTER } from 'imgLinks/imgLinks';
-import { Container, Div, ImgMovies, NavDiv, NavList, NavLink } from './MovieDetails.styled';
+import {
+  Container,
+  Div,
+  ImgMovies,
+  NavDiv,
+  NavList,
+  NavLink,
+  GoBackLink,
+} from './MovieDetails.styled';
+import { Loader } from 'components/Loader/Loader';
 
 export default function MovieDetails() {
   const [movie, setMovie] = useState(null);
   const { movieId } = useParams();
+  const location = useLocation();
+  const backLink = useRef(location);
+  const [isLiading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (!movieId) {
@@ -14,10 +26,13 @@ export default function MovieDetails() {
     }
     async function getMovie() {
       try {
+        setIsLoading(true);
         const showMovie = await fetchMovie(movieId);
         setMovie(showMovie);
       } catch (error) {
         console.error(error);
+      } finally {
+        setIsLoading(false);
       }
     }
     getMovie();
@@ -25,6 +40,9 @@ export default function MovieDetails() {
 
   return (
     <>
+      <GoBackLink to={backLink.current.state?.from ?? '/'}>Go back</GoBackLink>
+      {isLiading && <Loader />}
+
       {movie !== null && (
         <Container>
           <Div>
@@ -35,7 +53,6 @@ export default function MovieDetails() {
                   : DEFAULT_POSTER
               }`}
               alt={movie.title}
-              width="300"
             />
             <div>
               <div>
@@ -49,6 +66,7 @@ export default function MovieDetails() {
             </div>
           </Div>
           <NavDiv>
+            <h3>Additional information</h3>
             <nav>
               <NavList>
                 <li>
@@ -60,7 +78,9 @@ export default function MovieDetails() {
               </NavList>
             </nav>
           </NavDiv>
-          <Outlet />
+          <Suspense fallback={<Loader/>}>
+            <Outlet />
+          </Suspense>
         </Container>
       )}
     </>

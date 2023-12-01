@@ -1,7 +1,12 @@
-import { Outlet } from "react-router-dom";
-import { NavLink, Container, List, Header } from "./Layout.styled";
+import { Outlet } from 'react-router-dom';
+import { NavLink, Container, List, Header } from './Layout.styled';
+import { Suspense } from 'react';
+import { Loader } from 'components/Loader/Loader';
+import { GlobalStyle } from 'components/GlobalStyle';
 
-export const Layout = () => {
+
+
+const Layout = () => {
   return (
     <Container>
       <Header>
@@ -17,8 +22,13 @@ export const Layout = () => {
         </nav>
       </Header>
       <main>
-        <Outlet/>
+        <Suspense fallback={<Loader/>}>
+          <Outlet />
+        </Suspense>
       </main>
+      <GlobalStyle/>
     </Container>
   );
 };
+
+export default Layout;

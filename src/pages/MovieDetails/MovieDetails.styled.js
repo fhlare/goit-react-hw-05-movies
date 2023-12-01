@@ -46,3 +46,13 @@ export const NavLink = styled(Link)`
     background-color: orangered;
   }
 `;
+
+export const GoBackLink = styled(Link)`
+  padding: 8px 16px;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 500;
+  border-radius: 4px;
+  color: white;
+  background-color: orangered;
+`
