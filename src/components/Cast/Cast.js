@@ -12,7 +12,7 @@ const Cast = () => {
   const { movieId } = useParams();
   const [isLiading, setIsLoading] = useState(false);
 
-  console.log(movieId);
+
   useEffect(() => {
     if (!movieId) {
       return;
@@ -21,7 +21,6 @@ const Cast = () => {
       try {
         setIsLoading(true);
         const showCast = await fetchCast(movieId);
-        console.log('cast: ', showCast.cast);
         setCast([...showCast.cast]);
       } catch (error) {
         console.error(error);
