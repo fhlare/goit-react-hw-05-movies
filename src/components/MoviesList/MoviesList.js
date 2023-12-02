@@ -11,7 +11,6 @@ import { useLocation } from 'react-router-dom';
 
 export const MoviesList = ({ movies }) => {
   const location = useLocation();
-  console.log(movies.length);
   return (
     <ListContainer>
         <List>
